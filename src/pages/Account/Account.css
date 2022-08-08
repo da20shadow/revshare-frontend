@@ -1,0 +1,49 @@
+.account-box {
+  width: 30%;
+  padding: 25px 20px 10px;
+  box-shadow: 0 10px 15px -3px rgba(38, 44, 49, 0.2);
+  border-radius: 9px;
+  text-align: center;
+  background-color: rgba(121, 181, 204, 0.2);
+}
+@media screen and (max-width: 720px) {
+  .account-box {
+    width: 90%;
+    margin: 15px auto;
+  }
+}
+.account-box div {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+.account-box h3 {
+  font-weight: 600;
+  font-size: 25px;
+}
+.account-box p {
+  color: gray;
+}
+
+.buy-btn, .sell-btn {
+  font-weight: 600;
+  padding: 5px 20px;
+  margin: 10px 5px;
+  border: 1px solid #495564;
+  border-radius: 9px;
+  background-image: linear-gradient(to right, #38a7d7, #1d4ebb);
+  color: whitesmoke;
+}
+.buy-btn:hover, .sell-btn:hover {
+  background-image: linear-gradient(to right, #2563EB, #38BDF8);
+  box-shadow: 0 0 15px -3px rgba(38, 44, 49, 0.2);
+}
+
+.sell-btn {
+  background-image: linear-gradient(to right, #FB923C, #EA580C);
+  border: 1px solid #c0570b;
+}
+.sell-btn:hover {
+  background-image: linear-gradient(to right, #a94412, #cc7732);
+}
+
+/*# sourceMappingURL=Account.css.map */
