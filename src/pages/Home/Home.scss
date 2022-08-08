@@ -1,0 +1,26 @@
+.welcome{
+  background-image: url("../../assets/img/welcome-bg.png");
+  background-position: top left;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.box-border{
+  position: absolute;
+  border: solid 1px rgba(255,255,255,.5);
+  background: red;
+  content: '';
+  right: -10px;
+  bottom: -10px;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+.reviews{
+  background-color: #ecf1f3;
+}
+.affiliate{
+  background-image: url("../../assets/img/affiliate-bg.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  padding: 60px 0;
+}
