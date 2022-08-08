@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "colors";
+body{
+  margin: 0;
+  padding: 0;
+}
+.home-header {
+  display: block;
+  background-image: url("/src/assets/img/header.jpg");
+  background-size: cover;
+  background-position: top center;
+  background-repeat: no-repeat;
+  padding-top: 310px;
+  padding-bottom: 110px;
+}
