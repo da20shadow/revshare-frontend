@@ -1,0 +1,24 @@
+.marketplace-table{
+  width: 100%;
+  border: 1px solid rgba(128, 128, 128, 0.45);
+  box-shadow: 0 0 9px 3px rgba(105, 137, 168, 0.2);
+  thead{
+    background-color: rgb(29, 106, 185);
+    color: #ececec;
+  }
+  tr{
+    &:hover{
+      background-color: rgba(211, 211, 211, 0.5);
+    }
+  }
+  th{
+    padding: 10px 15px;
+    font-size: 19px;
+    border-right: 1px solid rgba(128, 128, 128, 0.45);
+  }
+  td{
+    padding: 10px 15px;
+    text-align: center;
+    border: 1px solid rgba(128, 128, 128, 0.45);
+  }
+}
