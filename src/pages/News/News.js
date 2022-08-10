@@ -1,7 +1,7 @@
 import {InnerHeader} from "../../components";
 
 function News() {
-    const newsBox = 'px-10 py-5 my-4 hover:bg-gray-100 hover:shadow-lg';
+    const newsBox = 'px-10 py-5 my-4 bg-gray-50 hover:bg-gray-100 hover:shadow-lg';
     const newsTitleStyle = 'w-fit text-xl text-gray-700 pb-2 font-bold hover:text-sky-700';
     const descriptionStyle = 'text-gray-600';
 
