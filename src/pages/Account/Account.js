@@ -38,7 +38,7 @@ function Account(){
                                     <h3>9</h3>
                                     <p>Total Referrals</p>
                                     <div>
-                                        <Link to={'/affiliates'} className={'buy-btn'}>Invite</Link>
+                                        <Link to={'/promo-tools'} className={'buy-btn'}>Invite</Link>
                                     </div>
                                 </div>
 
