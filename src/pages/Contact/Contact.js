@@ -15,11 +15,11 @@ function Contact () {
                                 If you have a questions you can use the support form below or use our social groups.
                             </h2>
 
-                            <div className={'grid grid-cols-1 md:grid-cols-2 gap-6'}>
+                            <div className={'grid grid-cols-1 lg:grid-cols-2 gap-6'}>
 
                                 <div className={'grid grid-cols-1 gap-4'}>
 
-                                    <form className={'w-full pb-10 px-5 bg-gray-200 mx-auto my-5 shadow-xl text-lg rounded-md'}>
+                                    <form className={'w-full pb-10 px-5 bg-gray-200 border border-gray-300 mx-auto my-5 shadow-xl text-lg rounded-md'}>
 
                                         <h3 className={'text-xl text-gray-700 font-bold my-5'}>Support Form</h3>
 
@@ -28,12 +28,23 @@ function Contact () {
                                                    type="text" placeholder={'Topic...'} required />
                                         </div>
 
-                                        <div className={'mb-7'}>
+                                        <div className={'mb-3'}>
                                             <textarea name="message"
                                                       className={'py-2 px-5 w-full rounded-md'}
                                                       placeholder={'Enter your message...'} required />
                                         </div>
 
+                                        <div className={'mb-3'}>
+                                            <input className={'py-2 px-5 w-full rounded-md'}
+                                                   type="text" placeholder={'Name'} required />
+                                        </div>
+
+                                        <div className={'mb-10'}>
+                                            <input className={'py-2 px-5 w-full rounded-md'}
+                                                   type="email" placeholder={'Email'} required />
+                                        </div>
+
+                                        {/*TODO: add captcha!*/}
                                         <div className={'flex justify-between'}>
                                             <select name="category" className={'py-3 px-5 bg-white w-full rounded-md'}>
                                                 <option value="general">General</option>
@@ -42,7 +53,7 @@ function Contact () {
                                                 <option value="general">Advertising</option>
                                             </select>
 
-                                            <button className={'w-full mx-5 rounded-md font-bold text-gray-100 hover:text-sky-200 hover:shadow-lg bg-gradient-to-r from-orange-400 to-orange-600'}
+                                            <button className={'w-full mx-5 rounded-md font-bold text-gray-100 hover:shadow-lg bg-gradient-to-r from-orange-400 to-orange-600'}
                                                     type={'submit'}>Send Message</button>
                                         </div>
 

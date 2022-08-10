@@ -13,3 +13,4 @@ export {default as Withdrawal} from './Withdrawal';
 export {default as BuyShares} from './BuyShares';
 export {default as SellShares} from './SellShares';
 export {default as Marketplace} from './Marketplace';
+export {default as PromoTools} from './PromoTools';
