@@ -1,7 +1,4 @@
 import {InnerHeader} from "../../components";
-import {GiSandsOfTime} from 'react-icons/gi';
-import {BsCheckLg} from 'react-icons/bs';
-import {MdArrowBackIos, MdOutlineArrowForwardIos} from "react-icons/md";
 import DepositHistory from "./Components/DepositHistory";
 
 function Deposit(){
@@ -14,7 +11,7 @@ function Deposit(){
                     <div className="px-4 py-6 sm:px-0">
                         <div className="h-fit">
 
-                            <form className={'my-5 border border-gray-300 bg-gray-200 px-10 py-10 shadow-xl w-full md:w-1/2 mx-auto border border-sky-100 rounded-lg'}>
+                            <form className={'my-5 border border-gray-400 bg-gray-200 px-10 py-10 shadow-xl w-full md:w-1/2 mx-auto border border-sky-100 rounded-lg'}>
 
                                 <h3 className={'mb-3 text-xl text-center text-rose-700'}>Min Deposit: <strong>$50</strong></h3>
 
