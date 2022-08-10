@@ -18,7 +18,7 @@
 .marketplace-table td {
   padding: 10px 15px;
   text-align: center;
-  border: 1px solid rgba(128, 128, 128, 0.45);
+  border-bottom: 1px solid rgba(128, 128, 128, 0.45);
 }
 
 /*# sourceMappingURL=Marketplace.css.map */
