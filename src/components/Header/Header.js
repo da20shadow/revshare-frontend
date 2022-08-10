@@ -13,7 +13,6 @@ function Header() {
 
     const userLinks = (
         <>
-            <NavLink to="/finance" className={({isActive}) => isActive ? activeLinkStyle : linkStyle}>Finance</NavLink>
             <NavLink to="/affiliates" className={({isActive}) => isActive ? activeLinkStyle : linkStyle}>Affiliates</NavLink>
             <NavLink to="/edit" className={({isActive}) => isActive ? activeLinkStyle : linkStyle}>Edit Profile</NavLink>
             <NavLink to="/account" className={({isActive}) => isActive ? activeLinkStyle : linkStyle}>Account</NavLink>
