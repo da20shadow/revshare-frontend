@@ -1,11 +1,15 @@
-import {InnerHeader} from "../../components";
+import {InnerHeader, Modal} from "../../components";
 import {Link} from "react-router-dom";
 
 function BuyShares(){
+
+
     const btnStyle = 'mx-3 py-3 px-10 font-bold text-lg text-gray-100 hover:shadow-lg border border-gray-400 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-md';
     const inputStyle = 'py-2 px-5 text-lg border border-gray-500 w-full rounded-md';
     const formStyle = 'mt-5 py-10 px-5 flex justify-between bg-gray-100 border border-gray-200';
     const boxStyle = 'my-5 py-10 px-5 w-full border border-gray-300 shadow-lg rounded-md';
+
+
     return (
         <>
             <InnerHeader title={'Buy Shares'} />
