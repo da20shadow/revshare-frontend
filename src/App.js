@@ -1,24 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import {Footer, Header} from "./components";
+import {Route, Routes} from "react-router-dom";
+import {
+    Account,
+    BuyShares,
+    Contact,
+    Deposit,
+    Edit,
+    Faq,
+    Home,
+    How,
+    Login, Marketplace,
+    News, PromoTools,
+    Register,
+    Rules, SellShares,
+    Withdrawal
+} from "./pages";
+import Affiliates from "./pages/Affiliates";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <>
+          <Header />
+          <Routes>
+              <Route path={'/'} element={<Home />} />
+              <Route path={'/login'} element={<Login />} />
+              <Route path={'/register'} element={<Register />} />
+              <Route path={'/account'} element={<Account />} />
+              <Route path={'/affiliates'} element={<Affiliates />} />
+              <Route path={'/promo-tools'} element={<PromoTools />} />
+              <Route path={'/edit'} element={<Edit />} />
+              <Route path={'/deposit'} element={<Deposit />} />
+              <Route path={'/withdrawal'} element={<Withdrawal />} />
+              <Route path={'/buy-shares'} element={<BuyShares />} />
+              <Route path={'/sell-shares'} element={<SellShares />} />
+              <Route path={'/marketplace'} element={<Marketplace />} />
+              <Route path={'/news'} element={<News />} />
+              <Route path={'/faq'} element={<Faq />} />
+              <Route path={'/rules'} element={<Rules />} />
+              <Route path={'/how'} element={<How />} />
+              <Route path={'/contact'} element={<Contact />} />
+          </Routes>
+          <Footer />
+      </>
   );
 }
 
