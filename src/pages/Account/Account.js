@@ -1,8 +1,15 @@
 import {InnerHeader} from "../../components";
 import './Account.css';
 import {Link} from "react-router-dom";
+import {useEffect, useState} from "react";
+import {useStateContext} from "../../context/ContextProvider";
 
 function Account(){
+    const {accountStat,setAccountStat} = useStateContext();
+
+    useEffect(()=>{
+
+    })
 
     return (
         <>
@@ -17,7 +24,7 @@ function Account(){
                             <div className={'my-5 flex flex-wrap justify-around'}>
 
                                 <div className={'account-box'}>
-                                    <h3>$<span>23.35</span></h3>
+                                    <h3>$<span>{accountStat.balance}</span></h3>
                                     <p>Account Balance</p>
                                     <div>
                                         <Link to={'/deposit'} className={'buy-btn'}>Add Funds</Link>
@@ -26,7 +33,7 @@ function Account(){
                                 </div>
 
                                 <div className={'account-box'}>
-                                    <h3>230</h3>
+                                    <h3>{accountStat.shares}</h3>
                                     <p>Total Shares</p>
                                     <div>
                                         <Link to={'/buy-shares'} className={'buy-btn'}>Buy</Link>
@@ -35,10 +42,10 @@ function Account(){
                                 </div>
 
                                 <div className={'account-box'}>
-                                    <h3>9</h3>
-                                    <p>Total Referrals</p>
+                                    <h3>$<span>{accountStat.withdrawals}</span></h3>
+                                    <p>Total Withdrawals</p>
                                     <div>
-                                        <Link to={'/promo-tools'} className={'buy-btn'}>Invite</Link>
+                                        <Link to={'/withdrawal'} className={'sell-btn'}>History</Link>
                                     </div>
                                 </div>
 
