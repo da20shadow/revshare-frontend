@@ -1,6 +1,8 @@
 import {InnerHeader} from "../../components";
 import {GiSandsOfTime} from 'react-icons/gi';
 import {BsCheckLg} from 'react-icons/bs';
+import {MdArrowBackIos, MdOutlineArrowForwardIos} from "react-icons/md";
+import DepositHistory from "./Components/DepositHistory";
 
 function Deposit(){
     return (
@@ -55,41 +57,7 @@ function Deposit(){
 
                             </form>
 
-                            <div className={'mt-10'}>
-
-                                <h2 className={'my-5 text-center text-3xl text-gray-700'}>Deposits History:</h2>
-
-                                <div style={{'overflow-x': "auto"}}>
-                                    <table className={'w-full'}>
-
-                                        <thead className={'bg-sky-700 text-white'}>
-                                        <th className={'py-3 px-5 text-lg border-r border-gray-100'}>Date</th>
-                                        <th className={'py-3 px-5 text-lg border-r border-gray-100'}>Amount</th>
-                                        <th className={'py-3 px-5 text-lg border-r border-gray-100'}>Processor</th>
-                                        <th className={'py-3 px-5 text-lg border-r border-gray-100'}>Status</th>
-                                        </thead>
-
-                                        <tbody>
-                                        <tr className={'hover:bg-gray-100 text-center'}>
-                                            <td className={'border border-gray-200 py-3 px-5'}>23/05/2022</td>
-                                            <td className={'border border-gray-200 py-3 px-5'}>$100.00</td>
-                                            <td className={'border border-gray-200 py-3 px-5'}>BTC</td>
-                                            <td className={'border border-gray-200 py-3 px-5'}>
-                                                <span className={'flex justify-center items-center'} ><GiSandsOfTime/> Pending</span>
-                                            </td>
-                                        </tr>
-                                        <tr className={'hover:bg-gray-100 text-center'}>
-                                            <td className={'border border-gray-200 py-3 px-5'}>15/05/2022</td>
-                                            <td className={'border border-gray-200 py-3 px-5'}>$150.00</td>
-                                            <td className={'border border-gray-200 py-3 px-5'}>BTC</td>
-                                            <td className={'border border-gray-200 py-3 px-5'}>
-                                                <span className={'flex justify-center items-center'} ><BsCheckLg /> Completed</span>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                            <DepositHistory />
 
                         </div>
                     </div>
