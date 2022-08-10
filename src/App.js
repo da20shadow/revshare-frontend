@@ -1,5 +1,5 @@
 import {Footer, Header} from "./components";
-import {Route, Routes} from "react-router-dom";
+import {Route, Routes, Navigate} from "react-router-dom";
 import {
     Account,
     BuyShares,
@@ -16,8 +16,10 @@ import {
     Withdrawal
 } from "./pages";
 import Affiliates from "./pages/Affiliates";
+import {useStateContext} from "./context/ContextProvider";
 
 function App() {
+    const {isLogged} = useStateContext();
   return (
       <>
           <Header />
@@ -25,15 +27,15 @@ function App() {
               <Route path={'/'} element={<Home />} />
               <Route path={'/login'} element={<Login />} />
               <Route path={'/register'} element={<Register />} />
-              <Route path={'/account'} element={<Account />} />
-              <Route path={'/affiliates'} element={<Affiliates />} />
-              <Route path={'/promo-tools'} element={<PromoTools />} />
-              <Route path={'/edit'} element={<Edit />} />
-              <Route path={'/deposit'} element={<Deposit />} />
-              <Route path={'/withdrawal'} element={<Withdrawal />} />
-              <Route path={'/buy-shares'} element={<BuyShares />} />
-              <Route path={'/sell-shares'} element={<SellShares />} />
-              <Route path={'/marketplace'} element={<Marketplace />} />
+              <Route path={'/account'} element={isLogged ? <Account /> : <Navigate to="/login" replace={true} />} />
+              <Route path={'/affiliates'} element={isLogged ? <Affiliates /> : <Navigate to="/login" replace={true} />} />
+              <Route path={'/promo-tools'} element={isLogged ? <PromoTools /> : <Navigate to="/login" replace={true} />} />
+              <Route path={'/edit'} element={isLogged ? <Edit /> : <Navigate to="/login" replace={true} />} />
+              <Route path={'/deposit'} element={isLogged ? <Deposit /> : <Navigate to="/login" replace={true} />} />
+              <Route path={'/withdrawal'} element={isLogged ? <Withdrawal /> : <Navigate to="/login" replace={true} />} />
+              <Route path={'/buy-shares'} element={isLogged ? <BuyShares /> : <Navigate to="/login" replace={true} />} />
+              <Route path={'/sell-shares'} element={isLogged ? <SellShares /> : <Navigate to="/login" replace={true} />} />
+              <Route path={'/marketplace'} element={isLogged ? <Marketplace /> : <Navigate to="/login" replace={true} />} />
               <Route path={'/news'} element={<News />} />
               <Route path={'/faq'} element={<Faq />} />
               <Route path={'/rules'} element={<Rules />} />
