@@ -3,7 +3,7 @@ import {InnerHeader} from "../../components";
 function Edit(){
     const boxStyle = 'shadow-lg border border-gray-300 bg-gray-100 py-5 px-10 rounded-md';
     const inputStyle = 'my-2 py-3 px-5 w-full rounded-md';
-    const saveBtn = 'my-2 py-2 px-5 font-bold text-gray-100 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-md'
+    const saveBtn = 'my-2 py-2 px-5 font-bold hover:shadow-lg text-gray-100 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-md'
     return (
         <>
             <InnerHeader title={'Edit Profile'} />
@@ -18,7 +18,7 @@ function Edit(){
 
                                 {/*Change Password*/}
                                 <div className={boxStyle}>
-                                    <h2 className="text-center text-xl tex-gray-700">Edit Password</h2>
+                                    <h2 className="text-center text-2xl font-bold text-gray-600 mb-5">Edit Password</h2>
                                     <form>
                                         <label>Current Password:
                                             <input className={inputStyle} type="password" placeholder={'Current Password'}/>
@@ -35,7 +35,7 @@ function Edit(){
 
                                 {/*Change Email*/}
                                 <div className={boxStyle}>
-                                    <h2 className="text-center text-xl tex-gray-700">Change Email</h2>
+                                    <h2 className="text-center text-2xl font-bold text-gray-600 mb-5">Change Email</h2>
                                     <form>
                                         <label>Current Email:
                                             <input className={inputStyle} type="email" placeholder={'Current Email'}/>
@@ -52,7 +52,7 @@ function Edit(){
 
                                 {/*Change Payment Processors*/}
                                 <div className={boxStyle}>
-                                    <h2 className="text-center text-xl tex-gray-700">Change Payment Processors</h2>
+                                    <h2 className="text-center text-2xl font-bold text-gray-600 mb-5">Change Payment Processors</h2>
                                     <form>
                                         <label>BTC Address:
                                             <input className={inputStyle} type="text" placeholder={'BTC'}/>
