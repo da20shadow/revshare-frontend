@@ -1,6 +1,35 @@
 import {InnerHeader} from "../../components";
+import {invalidUserInputs} from "../../utils/validators";
+import {register} from "../../services/userService";
+import {useNavigate} from "react-router-dom";
 
 function Register() {
+
+    const redirect = useNavigate();
+
+    const regHandler = (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+
+        if (formData.get('agree') !== 'on'){
+            alert('You must agree with the rules!');
+            return;
+        }
+        const userInputs = Object.fromEntries(formData);
+
+        if (!invalidUserInputs(userInputs)){
+            return;
+        }
+        register(userInputs).then(()=>{
+            setTimeout(()=>{
+                redirect('/login');
+            },500)
+        }).catch(err => {
+            console.log(err.message)
+            //TODO: add notification
+        })
+    }
+
     const labelStyle = 'text-gray-700 text-lg';
     const inputStyle = 'px-5 py-2 mt-2 w-full text-lg rounded-md';
     return (
@@ -12,7 +41,7 @@ function Register() {
                     <div className="px-4 py-6 sm:px-0">
                         <div className="h-fit">
 
-                            <form
+                            <form onSubmit={regHandler}
                                 className={'w-full lg:w-4/5 mx-auto shadow-xl rounded-md bg-gray-200 px-10 py-10 grid grid-cols-1 md:grid-cols-2 gap-4'}>
 
                                 <label className={labelStyle}>Username:
@@ -31,14 +60,14 @@ function Register() {
                                 </label>
 
                                 <label className={labelStyle}>Re-Password:
-                                    <input name={'rePassword'} className={inputStyle} type="password"
+                                    <input name={'re_password'} className={inputStyle} type="password"
                                            placeholder={'Re-Password'} required />
                                 </label>
                                 {/*TODO: add captcha*/}
 
                                 <div>
                                     <label className={'text-lg'}>
-                                        <input type="checkbox" className={'h-5 w-5 mx-3'} required />
+                                        <input name={'agree'} type="checkbox" className={'h-5 w-5 mx-3'} required />
                                         I agree with the <a className={'font-bold text-sky-700'} href={'/rules'}>rules</a> of the system.
                                     </label>
                                 </div>
