@@ -1,6 +1,22 @@
 import {MdArrowBackIos, MdOutlineArrowForwardIos} from "react-icons/md";
+import {useEffect, useState} from "react";
+import {getReferrals} from "../../../../services/userService";
+import {useStateContext} from "../../../../context/ContextProvider";
 
 function RefList(){
+    const {user} = useStateContext();
+    const [referrals,setReferrals] = useState([]);
+
+    useEffect(()=>{
+        getReferrals(user.token).then(res => {
+            console.log(res)
+            console.log(res.referrals)
+            setReferrals(res.referrals);
+        }).catch(err => {
+            console.log(err)
+        })
+    },[])
+
     return (
         <div className={'mt-5'}>
 
@@ -17,18 +33,23 @@ function RefList(){
                     </tr>
                     </thead>
 
-                    <tbody>
-                    <tr className={'hover:bg-gray-100 text-center'}>
-                        <td className={'border border-gray-200 py-3 px-5'}>12</td>
-                        <td className={'border border-gray-200 py-3 px-5'}>username1</td>
-                        <td className={'border border-gray-200 py-3 px-5'}>$1.2523</td>
-                    </tr>
-                    <tr className={'hover:bg-gray-100 text-center'}>
-                        <td className={'border border-gray-200 py-3 px-5'}>14</td>
-                        <td className={'border border-gray-200 py-3 px-5'}>sddder2</td>
-                        <td className={'border border-gray-200 py-3 px-5'}>$11.2523</td>
-                    </tr>
-                    </tbody>
+                    {
+                        referrals
+                            ? <tbody>
+                            {
+                                referrals.map(r =>
+                                    <tr key={r.id} className={'hover:bg-gray-100 text-center'}>
+                                        <td className={'border border-gray-200 py-3 px-5'}>{r.id}</td>
+                                        <td className={'border border-gray-200 py-3 px-5'}>{r.username}</td>
+                                        <td className={'border border-gray-200 py-3 px-5'}>${(r.refCom).toFixed(2)}</td>
+                                    </tr>
+                                )
+                            }
+
+                            </tbody>
+                            : ''
+                    }
+
                 </table>
             </div>
 
