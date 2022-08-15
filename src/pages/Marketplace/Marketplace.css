@@ -7,7 +7,7 @@
   background-color: #1d6ab9;
   color: #ececec;
 }
-.marketplace-table tr:hover {
+.marketplace-table .table-row:hover {
   background-color: rgba(211, 211, 211, 0.5);
 }
 .marketplace-table th {
