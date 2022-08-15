@@ -28,7 +28,33 @@
   animation-duration: 0.4s
 }
 
-/* Add Animation */
+.modal-content-hidden{
+  position: relative;
+  background-color: #fefefe;
+  margin: auto;
+  padding: 0;
+  border: 1px solid #888;
+  border-radius: 11px;
+  width: 80%;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+  -webkit-animation-name: animateHidden;
+  -webkit-animation-duration: 0.5s;
+  animation-name: animateHidden;
+  animation-duration: 0.5s
+}
+
+/* Hide modal Animation */
+@-webkit-keyframes animateHidden {
+  from {top:0; opacity:1}
+  to {top:-300px; opacity:0; display:none}
+}
+
+@keyframes animateHidden {
+  from {top:0; opacity:1}
+  to {top:-300px; opacity:0}
+}
+
+/* show modal Animation */
 @-webkit-keyframes animateTop {
   from {top:-300px; opacity:0}
   to {top:0; opacity:1}
@@ -66,7 +92,10 @@
   font-family: Roboto, sans-serif;
 }
 
-.modal-body {padding: 2px 16px;}
+.modal-body {
+  padding: 2px 16px;
+  background-color: #dedede;
+}
 
 .modal-footer {
   background-image: linear-gradient(to right, #38BDF8,#2563EB,#38BDF8 );
