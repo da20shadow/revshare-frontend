@@ -1,12 +1,13 @@
 import {InnerHeader} from "../../components";
 import {useNavigate} from 'react-router-dom';
-import {MdArrowBackIos, MdOutlineArrowForwardIos} from "react-icons/md";
 import AffStatistics from "./Components/AffStatistics";
 import RefList from "./Components/RefList";
+import {useStateContext} from "../../context/ContextProvider";
 
 function Affiliates(){
+    const {user} = useStateContext();
     const redirect = useNavigate();
-    const refLink = 'https://lucrative-shares.com/ref=username';
+    const refLink = `https://lucrative-shares.com/ref=${user.id}`;
     const btnStyle = 'mx-3 py-3 px-10 font-bold text-lg text-gray-100 hover:shadow-lg border border-gray-400 bg-gradient-to-r from-orange-400 to-orange-600 rounded-md';
 
     return (
