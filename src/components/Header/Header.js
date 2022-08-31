@@ -1,22 +1,69 @@
-import {NavLink} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import logo from '../../assets/img/logo.jpg';
 import {BsTelegram} from 'react-icons/bs';
+import {MdOutlineKeyboardArrowDown} from 'react-icons/md';
 import {AiOutlineMenu,AiOutlineClose,AiOutlineLogin,AiOutlineUserAdd} from 'react-icons/ai';
 import {useState} from "react";
+import {useStateContext} from "../../context/ContextProvider";
 
 function Header() {
     const [activeMenu,setActiveMenu] = useState(false);
-    const isLogged = true;
+    const [activeDropdown,setActiveDropdown] = useState(false);
+    const {isLogged,logoutUser} = useStateContext();
+    const redirect = useNavigate();
 
-    const linkStyle = `block hover:shadow-md lg:inline border border-white text-gray-700 hover:border-sky-700 hover:text-sky-800 px-3 py-1 rounded-md text-lg font-medium`;
+    const linkStyle = `block hover:shadow-md lg:inline border border-white text-gray-700 hover:border-sky-700 hover:bg-gray-50 hover:text-sky-800 px-3 py-1 rounded-md text-lg font-medium`;
     const activeLinkStyle = `block hover:shadow-md lg:inline border bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-3 py-1 rounded-md text-lg font-medium`;
+
+    const logout = (e) => {
+        e.preventDefault();
+        logoutUser();
+        setTimeout(()=>{
+            redirect('/login');
+        },200)
+    }
 
     const userLinks = (
         <>
+            <div className="relative inline-block text-left"
+                 onMouseEnter={()=>setActiveDropdown(true)}
+                 onMouseLeave={()=>setActiveDropdown(false)}
+            >
+                <div>
+                    <button type="button"
+                            className={`hover:shadow-md border border-white text-gray-700 hover:border-sky-700 hover:bg-gray-50 hover:text-sky-800 px-3 py-1 rounded-md text-lg font-medium inline-flex justify-center items-center w-full`}
+                            >
+                        History <MdOutlineKeyboardArrowDown size={'24px'} />
+                    </button>
+                </div>
+                {
+                    activeDropdown
+                        ? <div className="origin-top-right absolute left-0 w-72 lg:w-56 rounded-md shadow-lg bg-white ring-1 border border-gray-300 ring-black ring-opacity-5 focus:outline-none">
+                            <div className="py-1" role="none">
+                                <NavLink to="/deposit-history"
+                                         className={({isActive}) =>
+                                             isActive ? 'block m-2 px-4 py-2 text-white bg-gradient-to-r from-blue-500 to-cyan-500 rounded-md'
+                                                 : 'border border-white hover:border-gray-300 text-gray-700 block m-2 px-4 py-2 hover:bg-gray-100 rounded-md'}>
+                                    Deposit History
+                                </NavLink>
+                                <NavLink to="/withdrawal-history"
+                                         className={({isActive}) =>
+                                             isActive ? 'block m-2 px-4 py-2 text-white bg-gradient-to-r from-blue-500 to-cyan-500 rounded-md'
+                                                 : 'border border-white hover:border-gray-300 text-gray-700 block m-2 px-4 py-2 hover:bg-gray-100 rounded-md'}>
+                                    Withdrawals History
+                                </NavLink>
+
+                            </div>
+                        </div>
+                        : ''
+                }
+
+            </div>
+
             <NavLink to="/affiliates" className={({isActive}) => isActive ? activeLinkStyle : linkStyle}>Affiliates</NavLink>
             <NavLink to="/edit" className={({isActive}) => isActive ? activeLinkStyle : linkStyle}>Edit Profile</NavLink>
             <NavLink to="/account" className={({isActive}) => isActive ? activeLinkStyle : linkStyle}>Account</NavLink>
-            <NavLink to="#" className={linkStyle}>Logout</NavLink>
+            <NavLink onClick={logout} to="#" className={linkStyle}>Logout</NavLink>
         </>
     );
     const guestLinks = (
