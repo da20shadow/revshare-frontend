@@ -18,12 +18,10 @@ function Modal({title,setShowModal,form,btnText}){
                     <h2>{title}</h2>
                 </div>
                 <div className="modal-body">
-
                     {form}
-
                 </div>
                 <div className="modal-footer">
-                    <button form="modalForm">{btnText}</button>
+                    <button type={'submit'} form="modalForm">{btnText}</button>
                 </div>
             </div>
 
