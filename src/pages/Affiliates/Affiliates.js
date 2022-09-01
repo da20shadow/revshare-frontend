@@ -3,12 +3,28 @@ import {useNavigate} from 'react-router-dom';
 import AffStatistics from "./Components/AffStatistics";
 import RefList from "./Components/RefList";
 import {useStateContext} from "../../context/ContextProvider";
+import {useEffect, useState} from "react";
+import {getReferrals} from "../../services/userService";
 
 function Affiliates(){
+    const [referrals,setReferrals] = useState([]);
+    const [commission,setCommission] = useState(0);
     const {user} = useStateContext();
     const redirect = useNavigate();
-    const refLink = `https://lucrative-shares.com/ref=${user.id}`;
+
+    const refLink = `https://lucrative-shares.com/?ref=${user.id}`;
     const btnStyle = 'mx-3 py-3 px-10 font-bold text-lg text-gray-100 hover:shadow-lg border border-gray-400 bg-gradient-to-r from-orange-400 to-orange-600 rounded-md';
+
+    useEffect(()=>{
+        getReferrals(user.token).then(res => {
+            console.log('Res: ',res)
+            console.log(res.referrals)
+            setReferrals(res.referrals);
+            setCommission(res.total_commission);
+        }).catch(err => {
+            console.log(err)
+        })
+    },[])
 
     return (
         <>
@@ -20,7 +36,10 @@ function Affiliates(){
                     <div className="px-4 py-6 sm:px-0">
                         <div className="h-fit">
 
-                            <AffStatistics />
+                            {/*Aff Statistics*/}
+                            <AffStatistics totalPurchases={commission * 10} 
+                                           commission={commission}
+                                           totalReferrals={referrals.length} />
 
                             {/*Aff Link*/}
                             <div className={'flex justify-center lg:justify-between flex-wrap my-10'}>
@@ -34,7 +53,8 @@ function Affiliates(){
                                 </div>
                             </div>
 
-                            <RefList />
+                            {/*Referrals List*/}
+                            <RefList referrals={referrals} />
 
                         </div>
                     </div>
