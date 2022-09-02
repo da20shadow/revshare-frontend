@@ -1,10 +1,11 @@
 import {InnerHeader} from "../../components";
 import {invalidUserInputs} from "../../utils/validators";
 import {register} from "../../services/userService";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 
 function Register() {
-
+    const invitedBy = useParams();
+    console.log(invitedBy)
     const redirect = useNavigate();
 
     const regHandler = (e) => {
@@ -20,12 +21,18 @@ function Register() {
         if (!invalidUserInputs(userInputs)){
             return;
         }
+
+        if (Number.isInteger(invitedBy.id) && invitedBy.id > 0) {
+            userInputs['refer_id'] = invitedBy.id;
+        }
+
         register(userInputs).then(()=>{
             setTimeout(()=>{
                 redirect('/login');
             },500)
         }).catch(err => {
             console.log(err.message)
+            alert(err.message)
             //TODO: add notification
         })
     }
@@ -45,18 +52,27 @@ function Register() {
                                 className={'w-full lg:w-4/5 mx-auto shadow-xl rounded-md bg-gray-200 px-10 py-10 grid grid-cols-1 md:grid-cols-2 gap-4'}>
 
                                 <label className={labelStyle}>Username:
-                                    <input name={'username'} className={inputStyle} type="text" placeholder={'Username'}
+                                    <input name={'username'}
+                                           className={inputStyle}
+                                           type="text"
+                                           placeholder={'Username'}
                                            required />
                                 </label>
 
                                 <label className={labelStyle}>Email:
-                                    <input name={'email'} className={inputStyle} type="email" placeholder={'Email'}
+                                    <input name={'email'}
+                                           className={inputStyle}
+                                           type="email"
+                                           placeholder={'Email'}
                                            required />
                                 </label>
 
                                 <label className={labelStyle}>Password:
-                                    <input name={'password'} className={inputStyle} type="password"
-                                           placeholder={'Password'} required />
+                                    <input name={'password'}
+                                           className={inputStyle}
+                                           type="password"
+                                           placeholder={'Password'}
+                                           required />
                                 </label>
 
                                 <label className={labelStyle}>Re-Password:
