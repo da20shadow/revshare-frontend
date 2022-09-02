@@ -1,4 +1,4 @@
-import {get, post, put, del} from "./requester";
+import {get, post, patch, del} from "./requester";
 
 const path = 'users/'
 
@@ -19,8 +19,8 @@ export const register = (userData) => {
     return post(path, userData);
 }
 export const update = (userData,token) => {
-    return put(path, userData, token);
+    return patch(path, userData, token);
 }
 export const deleteUser = (token) => {
-    return del(path, token);
+    return del(path, '', token);
 }
