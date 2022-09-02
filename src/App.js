@@ -2,9 +2,8 @@ import {Footer, Header} from "./components";
 import {Route, Routes, Navigate} from "react-router-dom";
 import {
     Account,
-    BuyShares,
     Contact,
-    Deposit,
+    Deposit, DepositHistory,
     Edit,
     Faq,
     Home,
@@ -13,7 +12,7 @@ import {
     News, PromoTools,
     Register,
     Rules, SellShares,
-    Withdrawal
+    Withdrawal, WithdrawalHistory
 } from "./pages";
 import Affiliates from "./pages/Affiliates";
 import {useStateContext} from "./context/ContextProvider";
@@ -32,8 +31,9 @@ function App() {
               <Route path={'/promo-tools'} element={isLogged ? <PromoTools /> : <Navigate to="/login" replace={true} />} />
               <Route path={'/edit'} element={isLogged ? <Edit /> : <Navigate to="/login" replace={true} />} />
               <Route path={'/deposit'} element={isLogged ? <Deposit /> : <Navigate to="/login" replace={true} />} />
+              <Route path={'/deposit-history'} element={isLogged ? <DepositHistory /> : <Navigate to="/login" replace={true} />} />
               <Route path={'/withdrawal'} element={isLogged ? <Withdrawal /> : <Navigate to="/login" replace={true} />} />
-              <Route path={'/buy-shares'} element={isLogged ? <BuyShares /> : <Navigate to="/login" replace={true} />} />
+              <Route path={'/withdrawal-history'} element={isLogged ? <WithdrawalHistory /> : <Navigate to="/login" replace={true} />} />
               <Route path={'/sell-shares'} element={isLogged ? <SellShares /> : <Navigate to="/login" replace={true} />} />
               <Route path={'/marketplace'} element={isLogged ? <Marketplace /> : <Navigate to="/login" replace={true} />} />
               <Route path={'/news'} element={<News />} />
@@ -41,6 +41,7 @@ function App() {
               <Route path={'/rules'} element={<Rules />} />
               <Route path={'/how'} element={<How />} />
               <Route path={'/contact'} element={<Contact />} />
+              <Route path={'/ref=:id'} element={<Register />} />
           </Routes>
           <Footer />
       </>
