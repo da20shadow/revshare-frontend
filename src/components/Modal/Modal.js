@@ -3,12 +3,14 @@ import {useState} from "react";
 
 function Modal({title,setShowModal,form,btnText}){
     const [modalContentClass,setModalContentClass] = useState('modal-content');
+
     const hideModal = () => {
         setModalContentClass('modal-content-hidden');
         setTimeout(()=>{
             setShowModal(false);
         },400)
     }
+
     return(
         <div id="myModal" className="modal">
 
@@ -21,7 +23,7 @@ function Modal({title,setShowModal,form,btnText}){
                     {form}
                 </div>
                 <div className="modal-footer">
-                    <button type={'submit'} form="modalForm">{btnText}</button>
+                    <button onClick={hideModal} type={'submit'} form="modalForm">{btnText}</button>
                 </div>
             </div>
 

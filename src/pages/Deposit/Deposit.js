@@ -1,51 +1,124 @@
-import {Alert, InnerHeader} from "../../components";
+import {Alert, InnerHeader, Modal} from "../../components";
 import {useEffect, useState} from "react";
 import {useStateContext} from "../../context/ContextProvider";
 import * as paymentService from "../../services/paymentService";
-import {deposit} from "../../services/paymentService";
+import {deposit, getCryptoPrice} from "../../services/paymentService";
+import {useNavigate} from "react-router-dom";
 
 function Deposit() {
+    const redirect = useNavigate();
 
     const [notifications, setNotifications] = useState([]);
     const {user} = useStateContext();
-    const [processors, setProcessors] = useState();
+    const [processors, setProcessors] = useState([]);
+    const [selectedCurrency, setSelectedCurrency] = useState();
     const [minDeposit, setMinDeposit] = useState('');
-    const [amount, setAmount] = useState('');
+    const [amount, setAmount] = useState();
+    const [coinsAmount, setCoinsAmount] = useState('');
+    const [coins, setCoins] = useState([]);
+    const [showModal, setShowModal] = useState();
 
     useEffect(() => {
-        paymentService.getProcessors(user.token).then(res => {
-            setProcessors(res.processors);
+
+        paymentService.getProcessors(user.token)
+            .then(res => {
+                console.log(res.processors)
+                setProcessors(res.processors);
+            }).catch(err => {
+            console.log(err)
+        })
+
+        getCryptoPrice().then(res => {
+
+            let btc = res.data.find(c => c.id === 'bitcoin');
+            let eth = res.data.find(c => c.id === 'ethereum');
+            let ltc = res.data.find(c => c.id === 'litecoin');
+            let doge = res.data.find(c => c.id === 'dogecoin');
+
+            const coinsArr = [];
+
+            if (btc && eth && ltc && doge) {
+                coinsArr.push({price: ((1 / btc.priceUsd) * 1.05), symbol: btc.symbol});
+                coinsArr.push({price: (1 / eth.priceUsd) * 1.05, symbol: eth.symbol});
+                coinsArr.push({price: (1 / ltc.priceUsd) * 1.05, symbol: ltc.symbol});
+                coinsArr.push({price: (1 / doge.priceUsd) * 1.05, symbol: doge.symbol});
+
+                setCoins(coinsArr);
+            }
+
         }).catch(err => {
             console.log(err)
         })
+
     }, [])
 
-    const processDeposit = (e) => {
+    const openDepositModal = (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const depositAmount = formData.get('amount');
         const processor = formData.get('processor');
 
-        if (depositAmount < minDeposit) {
-            setNotifications(oldNotifications =>
-                [...oldNotifications,
-                    <Alert alertType={'Error'}
-                           message={`Minimum deposit for ${processor} is $${minDeposit}!`}/>
-                ]);
-        } else if (!processor) {
+        if (!processor) {
             setNotifications(oldNotifications =>
                 [...oldNotifications,
                     <Alert alertType={'Error'}
                            message={`Please, select payment processor!`}/>
                 ]);
+        } else if (depositAmount < minDeposit) {
+            setNotifications(oldNotifications =>
+                [...oldNotifications,
+                    <Alert alertType={'Error'}
+                           message={`Minimum deposit for ${processor} is $${minDeposit}!`}/>
+                ]);
         } else {
-            deposit({amount: depositAmount, processor}, user.token)
+            setAmount(depositAmount);
+
+            coins.map(c => {
+                if (c.symbol === selectedCurrency) {
+                    const theCoinsValue = (c.price * depositAmount).toFixed(8);
+                    setCoinsAmount(theCoinsValue);
+                }
+            })
+
+            setShowModal(true);
+        }
+    }
+
+    const processDeposit = (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        const address = formData.get('address');
+
+        if (!selectedCurrency) {
+            setNotifications(oldNotifications =>
+                [...oldNotifications,
+                    <Alert alertType={'Error'}
+                           message={`Please, select payment processor!`}/>
+                ]);
+        }
+        else if (amount < minDeposit) {
+            setNotifications(oldNotifications =>
+                [...oldNotifications,
+                    <Alert alertType={'Error'}
+                           message={`Minimum deposit for ${selectedCurrency} is $${minDeposit}!`}/>
+                ]);
+        }
+        else {
+            deposit({
+                amount,
+                wallet: address,
+                coins: coinsAmount,
+                processor: selectedCurrency
+            }, user.token)
                 .then(res => {
                     setNotifications(oldNotifications =>
                         [...oldNotifications,
                             <Alert alertType={'Success'}
                                    message={res.message}/>
                         ]);
+                    setTimeout(()=>{
+                        redirect('/deposit-history');
+                    },2000);
                 }).catch(err => {
                 setNotifications(oldNotifications =>
                     [...oldNotifications,
@@ -63,17 +136,73 @@ function Deposit() {
 
     const processorChangeHandler = (e) => {
 
-        const processor = e.currentTarget.value;
-        let proc = processors.find(p => p.name === processor);
+        const processorName = e.currentTarget.value;
+        let proc = processors.find(p => p.name === processorName);
 
         if (proc) {
+            setSelectedCurrency(proc.name);
             const min = proc.min_deposit;
             setMinDeposit(min);
         }
     }
 
+    const transferForm = (
+        <form id={'modalForm'} onSubmit={processDeposit}>
+            <div className={'text-center shadow-lg bg-gray-100 my-3 rounded-lg'}>
+                <div>
+                    <h3>You need to to transfer exact</h3>
+
+                    <strong className={'text-lg'}> {
+                        coins ? coins.map(c => {
+                            if (c.symbol === selectedCurrency) {
+                                return (c.price * amount).toFixed(8);
+                            }
+                        }) : 'Loading...'
+                    } </strong>
+
+                    <span className={'text-lg text-blue-800 font-bold block'}>{selectedCurrency}</span>
+
+                    <h3 className={'mb-3'}>To Address:</h3>
+
+                    <span className={'px-4 py-2 text-lg border border-gray-200 bg-cyan-100 rounded-lg'}>
+                        {
+                            processors
+                                ? processors.map(p => {
+                                    if (p.name === selectedCurrency) {
+                                        return p.wallet;
+                                    }
+                                })
+                                : 'Loading...'
+                        }
+                    </span>
+
+
+                    <h3 className={'my-3'}>After payment, enter your account number from which you made a payment
+                        in the form below and click the confirmation of payment.</h3>
+
+                    <h3 className={'text-rose-700 mb-3'}>NOTE: If you send an amount other than the amount listed it may not be credited to your account!</h3>
+
+                </div>
+
+                <input type="text"
+                       name="address"
+                       className="text-center block w-full pl-7 pr-12 px-5 py-2 sm:text-lg border-gray-300 rounded-md"
+                       placeholder="bc1qm45ghptcmhrlalc9q2ujdn90hhqvued2s3egpv"
+                       required
+                />
+            </div>
+        </form>
+    )
+
     return (
         <>
+            {
+                showModal ? <Modal title={'Confirmation of Payment'}
+                                   btnText={'I Made The Payment'}
+                                   form={transferForm}
+                                   setShowModal={setShowModal}/>
+                    : ''
+            }
             <InnerHeader title={'Deposit'}/>
 
             <div className={'z-50 fixed top-16 right-10'}>
@@ -88,7 +217,7 @@ function Deposit() {
                     <div className="px-4 py-6 sm:px-0">
                         <div className="h-fit">
 
-                            <form onSubmit={processDeposit}
+                            <form onSubmit={openDepositModal}
                                   className={'my-5 border border-gray-400 bg-gray-200 px-10 py-10 shadow-xl w-full md:w-1/2 mx-auto border border-sky-100 rounded-lg'}>
 
                                 <h3 className={'mb-3 text-xl text-center text-rose-700'}>Min

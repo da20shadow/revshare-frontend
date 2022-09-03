@@ -80,7 +80,7 @@ function SharesList({shares,setShares,setOrder,showModal,setShowModal,user}) {
                         })
                         }
                         </tbody>
-                        : ''
+                        : <h2>No Shares Available</h2>
                     }
                 </table>
 
