@@ -1,13 +1,14 @@
-import {InnerHeader} from "../../components";
+import {Alert, InnerHeader} from "../../components";
 import loginIcon from '../../assets/img/login-icon.png';
 import {Link, useNavigate} from "react-router-dom";
 import {invalidUserInputs} from "../../utils/validators";
 import {login} from "../../services/userService";
 import {useStateContext} from "../../context/ContextProvider";
+import {useState} from "react";
 
 function Login() {
-
-    const {isLogged,loginUser} = useStateContext();
+    const [notifications, setNotifications] = useState([]);
+    const {isLogged, loginUser} = useStateContext();
 
     const redirect = useNavigate();
 
@@ -18,20 +19,43 @@ function Login() {
         if (!invalidUserInputs({email, password})) {
             return;
         }
-        login({email, password}).then(user => {
-            loginUser(user);
-            setTimeout(() => {
-                redirect('/account');
-            }, 1000);
-        }).catch(err => {
+        login({email, password})
+            .then(user => {
+                console.log(user)
+                loginUser(user);
+
+                setNotifications(oldNotifications =>
+                    [...oldNotifications,
+                        <Alert alertType={'Success'}
+                               message={'Successfully Logged in!'}/>
+                    ]);
+
+                setTimeout(() => {
+                    redirect('/account');
+                }, 1000);
+            }).catch(err => {
             console.log(err.message);
-            //TODO show notification
+            setNotifications(oldNotifications =>
+                [...oldNotifications,
+                    <Alert alertType={'Error'}
+                           message={err.message}/>
+                ]);
         })
+        setTimeout(() => {
+            setNotifications(oldNotifications =>
+                oldNotifications.filter((_,i)=> i !== 0));
+        }, 1000);
     }
 
     return (
         <>
             <InnerHeader title={'Login'}/>
+
+            <div className={'z-50 fixed top-16 right-10'}>
+                {notifications
+                    ? notifications.map(n => <div key={Math.random()}>{n}</div>)
+                    : ''}
+            </div>
 
             <main>
                 <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
@@ -40,7 +64,7 @@ function Login() {
                         <div className="h-fit">
 
                             <form onSubmit={loginHandler}
-                                className={'mt-10 bg-gray-200 px-10 py-10 shadow-xl w-full md:w-1/2 mx-auto border border-sky-100 rounded-lg'}>
+                                  className={'mt-10 bg-gray-200 px-10 py-10 shadow-xl w-full md:w-1/2 mx-auto border border-sky-100 rounded-lg'}>
                                 <img style={{margin: '-100px auto 0'}}
                                      className={'mx-auto'}
                                      src={loginIcon} alt="Login Icon"/>
