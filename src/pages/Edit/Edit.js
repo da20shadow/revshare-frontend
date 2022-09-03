@@ -1,12 +1,47 @@
-import {InnerHeader} from "../../components";
+import {Alert, InnerHeader} from "../../components";
+import {useEffect, useState} from "react";
+import * as paymentService from "../../services/paymentService";
+import {useStateContext} from "../../context/ContextProvider";
+import EditWallets from "./EditWallets";
+import EditPassword from "./EditPassword";
+import EditEmail from "./EditEmail";
 
-function Edit(){
+function Edit() {
+    const {user, logoutUser} = useStateContext();
+    const [processors, setProcessors] = useState([]);
+    const [wallets, setWallets] = useState([]);
+    const [notifications, setNotifications] = useState([]);
+
+    useEffect(() => {
+        paymentService.getProcessors(user.token).then(res => {
+            console.log(res.processors)
+            setProcessors(res.processors);
+        }).catch(err => {
+            console.log(err)
+        })
+        paymentService.getUserWallets(user.token)
+            .then(r => {
+                console.log(r.wallets)
+                setWallets(r.wallets);
+            }).catch(err => {
+            console.log(err)
+        });
+    }, [])
+
     const boxStyle = 'shadow-lg border border-gray-300 bg-gray-100 py-5 px-10 rounded-md';
     const inputStyle = 'my-2 py-3 px-5 w-full rounded-md';
     const saveBtn = 'my-2 py-2 px-5 font-bold hover:shadow-lg text-gray-100 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-md'
+
+
     return (
         <>
-            <InnerHeader title={'Edit Profile'} />
+            <InnerHeader title={'Edit Profile'}/>
+
+            <div className={'z-50 fixed top-16 right-10'}>
+                {notifications
+                    ? notifications.map(n => <div key={Math.random()}>{n}</div>)
+                    : ''}
+            </div>
 
             <main>
                 <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
@@ -17,63 +52,24 @@ function Edit(){
                             <div className={'grid grid-cols-1 md:grid-cols-2 gap-8'}>
 
                                 {/*Change Password*/}
-                                <div className={boxStyle}>
-                                    <h2 className="text-center text-2xl font-bold text-gray-600 mb-5">Edit Password</h2>
-                                    <form>
-                                        <label>Current Password:
-                                            <input className={inputStyle} type="password" placeholder={'Current Password'}/>
-                                        </label>
-                                        <label>New Password:
-                                            <input className={inputStyle} type="password" placeholder={'New Password'}/>
-                                        </label>
-                                        <label>New Password again:
-                                            <input className={inputStyle} type="password" placeholder={'New Password again'}/>
-                                        </label>
-                                        <button className={saveBtn}>Save Changes</button>
-                                    </form>
-                                </div>
+                                <EditPassword styles={{boxStyle,inputStyle,saveBtn}}
+                                              user={user}
+                                              logoutUser={logoutUser}
+                                              setNotifications={setNotifications} />
 
                                 {/*Change Email*/}
-                                <div className={boxStyle}>
-                                    <h2 className="text-center text-2xl font-bold text-gray-600 mb-5">Change Email</h2>
-                                    <form>
-                                        <label>Current Email:
-                                            <input className={inputStyle} type="email" placeholder={'Current Email'}/>
-                                        </label>
-                                        <label>New Email:
-                                            <input className={inputStyle} type="email" placeholder={'New Email'}/>
-                                        </label>
-                                        <label>New Email again:
-                                            <input className={inputStyle} type="email" placeholder={'New Email again'}/>
-                                        </label>
-                                        <button className={saveBtn}>Save Changes</button>
-                                    </form>
-                                </div>
+                                <EditEmail styles={{boxStyle,inputStyle,saveBtn}}
+                                           user={user}
+                                           logoutUser={logoutUser}
+                                           setNotifications={setNotifications} />
 
                                 {/*Change Payment Processors*/}
-                                <div className={boxStyle}>
-                                    <h2 className="text-center text-2xl font-bold text-gray-600 mb-5">Change Payment Processors</h2>
-                                    <form>
-                                        <label>BTC Address:
-                                            <input className={inputStyle} type="text" placeholder={'BTC'}/>
-                                        </label>
-                                        <label>ETH Address:
-                                            <input className={inputStyle} type="text" placeholder={'ETH'}/>
-                                        </label>
-                                        <label>LTC Address:
-                                            <input className={inputStyle} type="text" placeholder={'LTC'}/>
-                                        </label>
-                                        <label>Doge Address:
-                                            <input className={inputStyle} type="text" placeholder={'Doge'}/>
-                                        </label>
-                                        <label>Tron Address:
-                                            <input className={inputStyle} type="text" placeholder={'Tron'}/>
-                                        </label>
-
-                                        <button className={saveBtn}>Save Changes</button>
-                                    </form>
-                                </div>
-
+                                <EditWallets styles={{boxStyle,inputStyle,saveBtn}}
+                                             user={user}
+                                             logoutUser={logoutUser}
+                                             setNotifications={setNotifications}
+                                             wallets={wallets}
+                                             processors={processors} />
 
 
                             </div>
@@ -85,4 +81,5 @@ function Edit(){
         </>
     )
 }
+
 export default Edit;
