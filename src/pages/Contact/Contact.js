@@ -25,23 +25,23 @@ function Contact () {
 
                                         <div className={'mb-3'}>
                                             <input className={'py-2 px-5 w-full rounded-md'}
-                                                   type="text" placeholder={'Topic...'} required />
-                                        </div>
-
-                                        <div className={'mb-3'}>
-                                            <textarea name="message"
-                                                      className={'py-2 px-5 w-full rounded-md'}
-                                                      placeholder={'Enter your message...'} required />
-                                        </div>
-
-                                        <div className={'mb-3'}>
-                                            <input className={'py-2 px-5 w-full rounded-md'}
                                                    type="text" placeholder={'Name'} required />
                                         </div>
 
-                                        <div className={'mb-10'}>
+                                        <div className={'mb-3'}>
                                             <input className={'py-2 px-5 w-full rounded-md'}
                                                    type="email" placeholder={'Email'} required />
+                                        </div>
+
+                                        <div className={'mb-3'}>
+                                            <input className={'py-2 px-5 w-full rounded-md'}
+                                                   type="text" placeholder={'Subject...'} required />
+                                        </div>
+
+                                        <div className={'mb-10'}>
+                                            <textarea name="message"
+                                                      className={'py-2 px-5 w-full rounded-md'}
+                                                      placeholder={'Enter your message...'} required />
                                         </div>
 
                                         {/*TODO: add captcha!*/}
