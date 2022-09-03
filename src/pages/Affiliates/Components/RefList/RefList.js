@@ -1,21 +1,7 @@
 import {MdArrowBackIos, MdOutlineArrowForwardIos} from "react-icons/md";
-import {useEffect, useState} from "react";
-import {getReferrals} from "../../../../services/userService";
-import {useStateContext} from "../../../../context/ContextProvider";
 
-function RefList(){
-    const {user} = useStateContext();
-    const [referrals,setReferrals] = useState([]);
+function RefList({referrals}){
 
-    useEffect(()=>{
-        getReferrals(user.token).then(res => {
-            console.log(res)
-            console.log(res.referrals)
-            setReferrals(res.referrals);
-        }).catch(err => {
-            console.log(err)
-        })
-    },[])
 
     return (
         <div className={'mt-5'}>
