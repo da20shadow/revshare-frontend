@@ -1,0 +1,15 @@
+.blue-btn{
+  display: block;
+  width: 100%;
+  font-weight: 600;
+  padding: 5px 20px;
+  margin: 5px 2px;
+  border: 1px solid #495564;
+  border-radius: 2px;
+  background-image: linear-gradient(to right, #38a7d7, #1d4ebb);
+  color:whitesmoke;
+  &:hover{
+    background-image: linear-gradient(to right, #2563EB, #38BDF8 );
+    box-shadow: 0 0 15px -3px rgba(38, 44, 49, 0.2);
+  }
+}
