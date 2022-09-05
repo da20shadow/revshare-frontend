@@ -1,3 +1,5 @@
+import {removeUser} from "../utils/utils";
+
 const baseUrl = 'http://localhost:8090/Revshare-BackEnd'
 
 const request = async (path,data,token,method) => {
@@ -16,17 +18,16 @@ export const get = (path,token) => {
 export const post = (path,data,token) => {
     return request(path,data,token,'POST');
 }
-export const put = (path,data,token) => {
-    return request(path,data,token,'PUT');
+export const patch = (path,data,token) => {
+    return request(path,data,token,'PATCH');
 }
-export const del = (path,token) => {
-    return request(path,'',token,'DELETE');
+export const del = (path,data,token) => {
+    return request(path,data,token,'DELETE');
 }
 
 async function responseHandler(response){
 
     const result = await response.json();
-
     if (response.ok){
         return result;
     }else {
