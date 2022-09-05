@@ -3,6 +3,7 @@ import {HomeHeader, Income, Intro, Statistics,AffiliateInfo} from "./components"
 import Reviews from "./components/Reviews";
 
 function Home() {
+
     return (
         <>
             <HomeHeader />
