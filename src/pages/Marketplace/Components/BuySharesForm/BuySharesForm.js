@@ -46,7 +46,7 @@ function BuySharesForm(
         })
         setTimeout(() => {
             setNotification(undefined);
-        }, 1500)
+        }, 2000)
     }
 
     return (
