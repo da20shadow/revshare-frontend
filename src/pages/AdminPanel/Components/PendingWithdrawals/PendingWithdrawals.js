@@ -58,10 +58,14 @@ function PendingWithdrawals() {
                             redirect('/login')
                         },1000)
                     }
-                    console.log(err.message)
                 })
             }).catch(err => {
-                console.log(err)
+                if (err.message === 'Invalid or Expired Token!'){
+                    logoutUser();
+                    setTimeout(()=>{
+                        redirect('/login')
+                    },1000)
+                }
             })
 
         }).catch(err => {
@@ -107,6 +111,13 @@ function PendingWithdrawals() {
         console.log('User ID:',user_id)
         //TODO: redirect to single user info page and make request to /users/user_id
     }
+    const copyData = (e) =>{
+        const walletAddress = e.currentTarget.textContent;
+        navigator.clipboard.writeText(walletAddress)
+            .then(()=>{
+            alert('Copied: '+ walletAddress);
+        })
+    }
     return (
         <>
             <div className={'z-50 fixed top-16 right-10'}>
@@ -151,11 +162,15 @@ function PendingWithdrawals() {
                                 <td className={'text-sm border-b border-gray-200 py-3 px-5'}>{w.id}</td>
                                 <td className={'text-sm border-b border-gray-200 py-3 px-5'}>{w.date}</td>
                                 <td className={'text-sm border-b border-gray-200 py-3 px-5'}>${(w.amount).toFixed(2)}</td>
-                                <td className={'text-sm border-b border-gray-200 py-3 px-5'}>
+                                <td onClick={copyData}
+                                    className={'cursor-pointer hover:text-cyan-800 text-sm border-b border-gray-200 py-3 px-5'}>
                                     {(w.coins).toFixed(8)}
                                 </td>
                                 <td className={'text-sm border-b border-gray-200 py-3 px-5'}>{w.processor}</td>
-                                <td className={'text-sm border-b border-gray-200 py-3 px-5'}>{w.wallet}</td>
+                                <td onClick={copyData}
+                                    className={'cursor-pointer hover:text-cyan-800 text-sm border-b border-gray-200 py-3 px-5'}>
+                                    {w.wallet}
+                                </td>
                                 <td className={'text-sm border-b border-gray-200 py-3 px-5'}>
                                     <span onClick={()=> showUserInfo(w.user_id)}
                                           className={'cursor-pointer hover:text-cyan-800'}>
