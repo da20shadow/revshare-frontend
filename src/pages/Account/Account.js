@@ -61,15 +61,12 @@ function Account(){
                                     <h3>$<span>{accountStat ? Number(accountStat.withdrawals).toFixed(2) : 'Loading...'}</span></h3>
                                     <p>Total Withdrawals</p>
                                     <div>
-                                        <Link to={'/withdrawal'} className={'sell-btn'}>History</Link>
+                                        <Link to={'/withdrawal-history'} className={'sell-btn'}>History</Link>
                                     </div>
                                 </div>
 
                             </div>
 
-                            <div className={'border'}>
-                                Banner Ad
-                            </div>
                         </div>
                     </div>
                 </div>
