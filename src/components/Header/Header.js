@@ -9,7 +9,7 @@ import {useStateContext} from "../../context/ContextProvider";
 function Header() {
     const [activeMenu,setActiveMenu] = useState(false);
     const [activeDropdown,setActiveDropdown] = useState(false);
-    const {isLogged,logoutUser} = useStateContext();
+    const {user,isLogged,logoutUser} = useStateContext();
     const redirect = useNavigate();
 
     const linkStyle = `block hover:shadow-md lg:inline border border-white text-gray-700 hover:border-sky-700 hover:bg-gray-50 hover:text-sky-800 px-3 py-1 rounded-md text-lg font-medium`;
@@ -60,6 +60,11 @@ function Header() {
 
             </div>
 
+            {
+                user.role === 1 
+                    ? <NavLink to="/scradminpanel" className={({isActive}) => isActive ? activeLinkStyle : linkStyle}>Admin Panel</NavLink>
+                    : ''
+            }
             <NavLink to="/affiliates" className={({isActive}) => isActive ? activeLinkStyle : linkStyle}>Affiliates</NavLink>
             <NavLink to="/edit" className={({isActive}) => isActive ? activeLinkStyle : linkStyle}>Edit Profile</NavLink>
             <NavLink to="/account" className={({isActive}) => isActive ? activeLinkStyle : linkStyle}>Account</NavLink>
