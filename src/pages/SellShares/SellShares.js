@@ -20,9 +20,7 @@ function SellShares() {
     useEffect(() => {
         getUserShares(user.token).then(res => {
             setMyOrders(res.orders);
-            console.log(res.orders)
         }).catch(err => {
-            console.log(err)
             if (err.message === 'Invalid or Expired Token!') {
                 logoutUser();
                 setTimeout(() => {
@@ -34,7 +32,6 @@ function SellShares() {
             getAccountStat(user.token).then(stat => {
                 setAccountStat(stat);
             }).catch(err => {
-                console.log(err)
                 if (err.message === 'Invalid or Expired Token!') {
                     logoutUser();
                     setTimeout(() => {
@@ -48,6 +45,10 @@ function SellShares() {
 
     const publishOrder = (e) => {
         e.preventDefault();
+
+        if (!user.email){
+            redirect('/login');
+        }
 
         const sharesData = new FormData(e.currentTarget);
         const {quantity, price} = Object.fromEntries(sharesData);
@@ -96,6 +97,12 @@ function SellShares() {
                 getUserShares(user.token).then(res => {
                     setMyOrders(res.orders);
                 }).catch(err => {
+                    if (err.message === 'Invalid or Expired Token!') {
+                        logoutUser();
+                        setTimeout(() => {
+                            redirect('/login')
+                        }, 1000)
+                    }
                     setNotifications(oldNotifications =>
                         [...oldNotifications,
                             <Alert alertType={'Error'}
@@ -104,6 +111,12 @@ function SellShares() {
                 })
 
             }).catch(err => {
+            if (err.message === 'Invalid or Expired Token!') {
+                logoutUser();
+                setTimeout(() => {
+                    redirect('/login')
+                }, 1000)
+            }
             setNotifications(oldNotifications =>
                 [...oldNotifications,
                     <Alert alertType={'Error'}
@@ -120,12 +133,19 @@ function SellShares() {
     }
 
     const editOrderHandler = (orderId) => {
+        if (!user.email){
+            redirect('/login');
+        }
         setShowModal(!showModal);
         setEditOrderId(orderId);
     }
 
     const editOrder = (e) => {
         e.preventDefault();
+
+        if (!user.email){
+            redirect('/login');
+        }
 
         const data = new FormData(e.currentTarget);
         const {price} = Object.fromEntries(data);
@@ -161,6 +181,12 @@ function SellShares() {
                 return o;
             }))
         }).catch(err => {
+            if (err.message === 'Invalid or Expired Token!') {
+                logoutUser();
+                setTimeout(() => {
+                    redirect('/login')
+                }, 1000)
+            }
             setNotifications(oldNotifications =>
                 [...oldNotifications,
                     <Alert alertType={'Error'}
@@ -208,6 +234,12 @@ function SellShares() {
                 }
             ))
         }).catch(err => {
+            if (err.message === 'Invalid or Expired Token!') {
+                logoutUser();
+                setTimeout(() => {
+                    redirect('/login')
+                }, 1000)
+            }
             setNotifications(oldNotifications =>
                 [...oldNotifications,
                     <Alert alertType={'Error'}

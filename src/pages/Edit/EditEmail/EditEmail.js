@@ -1,5 +1,6 @@
 import {Alert} from "../../../components";
 import {update} from "../../../services/userService";
+import {useNavigate} from "react-router-dom";
 
 function EditEmail(
     {
@@ -10,10 +11,15 @@ function EditEmail(
     }
 ){
 
+    const redirect = useNavigate();
     const changeEmailHandler = (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const {email,newEmail,newEmailAgain} = Object.fromEntries(formData);
+
+        if (!user.email){
+            redirect('/login')
+        }
 
         if (newEmail !== newEmailAgain) {
             setNotifications(oldNotifications =>
@@ -25,16 +31,15 @@ function EditEmail(
 
         update({email,newEmail},user.token)
             .then(res => {
-                console.log(res)
                 setNotifications(oldNotifications =>
                     [...oldNotifications,
                         <Alert alertType={'Success'}
                                message={res.message}/>
                     ]);
             }).catch(err => {
-            console.log(err)
             if (err.message === 'Invalid or Expired Token!'){
                 logoutUser();
+                redirect('/login')
                 return;
             }
             setNotifications(oldNotifications =>

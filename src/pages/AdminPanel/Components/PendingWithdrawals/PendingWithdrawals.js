@@ -76,7 +76,10 @@ function PendingWithdrawals() {
 
     const approveWithdrawal = (withdrawal_id,amount) => {
         //TODO: update user balance and deposit status
-        console.log('Approve Deposit ID: ',withdrawal_id)
+        if (user.role !== 1){
+            redirect('/login');
+        }
+
         setPendingAmount(pendingAmount - amount);
         setWithdrawals(oldWithdrawals => oldWithdrawals.filter(w => w.id !== withdrawal_id));
 
@@ -92,9 +95,11 @@ function PendingWithdrawals() {
         }, 2000);
     }
     const rejectWithdrawal = (withdrawal_id,amount) => {
-
+        if (user.role !== 1){
+            redirect('/login');
+        }
         setPendingAmount(pendingAmount - amount);
-        console.log('Reject withdrawal ID: ',withdrawal_id)
+
         setNotifications(oldNotifications =>
             [...oldNotifications,
                 <Alert alertType={'Success'}

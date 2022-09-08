@@ -7,15 +7,14 @@ import {useState} from "react";
 
 function AddNews() {
     const [notifications, setNotifications] = useState([]);
-    const {user} = useStateContext();
+    const {user,logoutUser} = useStateContext();
     const redirect = useNavigate();
 
     const publishNewsHandler = (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const {title,description} = Object.fromEntries(formData);
-        console.log(title)
-        console.log(description)
+
         //TODO: validate data and send to database
 
         publishNews({title,description},user.token)
@@ -30,12 +29,19 @@ function AddNews() {
                 },1000)
 
         }).catch(err => {
-            console.log(err.message)
+
             setNotifications(oldNotifications =>
                 [...oldNotifications,
                     <Alert alertType={'Error'}
                            message={err.message}/>
                 ]);
+            if (err.message === 'Invalid or Expired Token!'){
+                logoutUser();
+                setTimeout(()=>{
+                    redirect('/login')
+                },1000)
+            }
+
         })
 
         setTimeout(() => {
@@ -69,7 +75,7 @@ function AddNews() {
                            required/>
                 </div>
                 <div className={'mb-3'}>
-                    <textarea className={'w-full py-2 px-4'}
+                    <textarea className={'w-full h-96 py-2 px-4'}
                               name={'description'}
                               placeholder={'Description...'}
                               required/>

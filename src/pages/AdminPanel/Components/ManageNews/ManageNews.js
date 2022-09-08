@@ -5,8 +5,12 @@ import {GiSandsOfTime} from "react-icons/gi";
 import {MdArrowBackIos, MdOutlineArrowForwardIos} from "react-icons/md";
 import {useEffect, useState} from "react";
 import {getNews} from "../../../../services/newsService";
+import {useStateContext} from "../../../../context/ContextProvider";
+import {useNavigate} from "react-router-dom";
 
 function ManageNews(){
+    const redirect = useNavigate();
+    const {user,logoutUser} = useStateContext();
     const [news,setNews] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [numOfPages, setNumOfPages] = useState(1);
@@ -15,10 +19,14 @@ function ManageNews(){
     //TODO: useEffect to get the news from DB!
     useEffect(()=>{
         getNews().then(res => {
-            console.log(res.news)
             setNews(res.news)
         }).catch(err => {
-            console.log(err.message)
+            if (err.message === 'Invalid or Expired Token!'){
+                logoutUser();
+                setTimeout(()=>{
+                    redirect('/login')
+                },1000)
+            }
         })
     },[])
 

@@ -1,14 +1,19 @@
 import {update} from "../../../services/userService";
 import {Alert} from "../../../components";
+import {useNavigate} from "react-router-dom";
 
 function EditPassword(
     {styles, user, logoutUser, setNotifications}
 ) {
+    const redirect = useNavigate();
     const changePasswordHandler = (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const {oldPassword, newPassword, newPasswordAgain} = Object.fromEntries(formData);
 
+        if (!user.email){
+            redirect('/login');
+        }
         if (newPassword !== newPasswordAgain) {
             setNotifications(oldNotifications =>
                 [...oldNotifications,
@@ -24,14 +29,12 @@ function EditPassword(
         }else {
             update({password:oldPassword,newPassword},user.token)
                 .then(res => {
-                    console.log(res)
                     setNotifications(oldNotifications =>
                         [...oldNotifications,
                             <Alert alertType={'Success'}
                                    message={res.message}/>
                         ]);
             }).catch(err => {
-                console.log(err)
                 if (err.message === 'Invalid or Expired Token!'){
                     logoutUser();
                     return;

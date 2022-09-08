@@ -1,5 +1,6 @@
 import * as paymentService from "../../../services/paymentService";
 import {Alert} from "../../../components";
+import {useNavigate} from "react-router-dom";
 
 function EditWallets(
     {
@@ -7,6 +8,7 @@ function EditWallets(
     }
 ) {
 
+    const redirect = useNavigate();
     const changeWalletAddress = (e) => {
         e.preventDefault();
 
@@ -18,8 +20,6 @@ function EditWallets(
             changedWallets[processor] = formData.get(processor);
         })
 
-        console.log(changedWallets);
-
         paymentService.updateProcessors(changedWallets,user.token)
             .then(res => {
 
@@ -30,7 +30,11 @@ function EditWallets(
                     ]);
 
             }).catch(err => {
-            console.log(err)
+            if (err.message === 'Invalid or Expired Token!'){
+                logoutUser();
+                redirect('/login')
+                return;
+            }
             setNotifications(oldNotifications =>
                 [...oldNotifications,
                     <Alert alertType={'Error'}

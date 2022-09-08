@@ -12,7 +12,7 @@ function Statistics() {
     const [avgReturn, setAvgReturn] = useState(0.0);
 
     useEffect(() => {
-        getProfitHistory().then(res => {
+        getProfitHistory(user.token).then(res => {
             console.log(res.dividends);
             let dividends = res.dividends;
             let weeks = dividends.length;
@@ -27,12 +27,7 @@ function Statistics() {
             setAvgReturn(avgYearlyReturn);
             setProfitPaid(res.total);
         }).catch(err => {
-            if (err.message === 'Invalid or Expired Token!') {
-                logoutUser();
-                setTimeout(() => {
-                    redirect('/login')
-                }, 1500)
-            }
+            console.log(err.message)
         })
     }, [])
 

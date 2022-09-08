@@ -8,20 +8,29 @@ import {useNavigate} from "react-router-dom";
 function Withdrawal() {
     const redirect = useNavigate();
     const [notifications, setNotifications] = useState([]);
-    const {user, accountStat, setAccountStat, logoutUser} = useStateContext();
+    const {user, isLogged, accountStat, setAccountStat, logoutUser} = useStateContext();
     const [processors, setProcessors] = useState();
     const [minWithdrawal, setMinWithdrawal] = useState('');
     const [amount, setAmount] = useState('');
     const [fee, setFee] = useState('');
     const [willGet, setWillGet] = useState('0.00');
-    const [disabledBtn,setDisabledBtn] = useState(true);
+    const [disabledBtn, setDisabledBtn] = useState(true);
 
     useEffect(() => {
+
+        if (!isLogged){
+            redirect('/login');
+        }
 
         paymentService.getProcessors(user.token).then(res => {
             setProcessors(res.processors);
         }).catch(err => {
-            console.log(err)
+            if (err.message === 'Invalid or Expired Token!') {
+                logoutUser();
+                setTimeout(() => {
+                    redirect('/login')
+                }, 1000)
+            }
         })
 
         if (!accountStat.balance) {
@@ -88,26 +97,27 @@ function Withdrawal() {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const {amount, processor} = Object.fromEntries(formData);
-        console.log('Amount', amount)
-        console.log('Processor', processor)
+
+        if (!isLogged) {
+            redirect('/login');
+        }
 
         if (accountStat.balance < amount) {
             setNotifications(oldNotifications =>
                 [...oldNotifications,
                     <Alert alertType={'Error'}
-                                   message={'Not enough balance, you have only: $'
-                                   + (accountStat.balance).toFixed(2)}/>
+                           message={'Not enough balance, you have only: $'
+                           + (accountStat.balance).toFixed(2)}/>
                 ]);
             setTimeout(() => {
                 setNotifications(oldNotifications =>
-                    oldNotifications.filter((_,i)=> i !== 0));
-            },2000)
+                    oldNotifications.filter((_, i) => i !== 0));
+            }, 2000)
             return;
         }
 
-        paymentService.processWithdrawal({amount,processor},user.token)
+        paymentService.processWithdrawal({amount, processor}, user.token)
             .then(r => {
-                console.log(r)
                 setNotifications(oldNotifications =>
                     [...oldNotifications,
                         <Alert alertType={'Success'}
@@ -115,18 +125,24 @@ function Withdrawal() {
                     ]);
             })
             .catch(err => {
-                console.log(err)
+
                 setNotifications(oldNotifications =>
                     [...oldNotifications,
                         <Alert alertType={'Error'}
                                message={err.message}/>
                     ]);
+                if (err.message === 'Invalid or Expired Token!') {
+                    logoutUser();
+                    setTimeout(() => {
+                        redirect('/login')
+                    }, 1000)
+                }
             })
 
         setTimeout(() => {
             setNotifications(oldNotifications =>
-                oldNotifications.filter((_,i)=> i !== 0));
-        },2000);
+                oldNotifications.filter((_, i) => i !== 0));
+        }, 2000);
 
     }
     return (
@@ -200,11 +216,11 @@ function Withdrawal() {
 
                                 <div className={'mt-4 flex justify-between'}>
                                     <button disabled={disabledBtn}
-                                        className={`${disabledBtn 
-                                            ? 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-500 ' 
-                                            : 'bg-gradient-to-r from-orange-400 to-orange-600 text-white hover:shadow-lg '} 
+                                            className={`${disabledBtn
+                                                ? 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-500 '
+                                                : 'bg-gradient-to-r from-orange-400 to-orange-600 text-white hover:shadow-lg '} 
                                             font-bold text-xl px-10 py-2 border rounded-lg`}
-                                        type={'submit'}>Withdrawal
+                                            type={'submit'}>Withdrawal
                                     </button>
                                 </div>
 

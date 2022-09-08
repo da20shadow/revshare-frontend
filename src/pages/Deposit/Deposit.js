@@ -9,7 +9,7 @@ function Deposit() {
     const redirect = useNavigate();
 
     const [notifications, setNotifications] = useState([]);
-    const {user} = useStateContext();
+    const {user,isLogged,logoutUser} = useStateContext();
     const [processors, setProcessors] = useState([]);
     const [selectedCurrency, setSelectedCurrency] = useState();
     const [minDeposit, setMinDeposit] = useState('');
@@ -25,7 +25,12 @@ function Deposit() {
                 console.log(res.processors)
                 setProcessors(res.processors);
             }).catch(err => {
-            console.log(err)
+            if (err.message === 'Invalid or Expired Token!'){
+                logoutUser();
+                setTimeout(()=>{
+                    redirect('/login')
+                },1000)
+            }
         })
 
         getCryptoPrice().then(res => {
@@ -58,6 +63,10 @@ function Deposit() {
         const depositAmount = formData.get('amount');
         const processor = formData.get('processor');
 
+        if (!isLogged){
+            redirect('/login');
+        }
+
         if (!processor) {
             setNotifications(oldNotifications =>
                 [...oldNotifications,
@@ -70,10 +79,58 @@ function Deposit() {
                     <Alert alertType={'Error'}
                            message={`Minimum deposit for ${processor} is $${minDeposit}!`}/>
                 ]);
+        } else if (processor === 'ePayCore'){
+
+            const data = {
+                epc_merchant_id: 100000,
+                epc_commission: 1,
+                epc_amount: 10,
+                epc_currency_code: 'usd',
+                epc_order_id: 123456789,
+                epc_success_url: 'https://website.com/success',
+                epc_cancel_url: 'https://website.com/cance',
+                epc_status_url: 'https://website.com/status',
+                epc_sign: 'bb189931db0cb0a9e5c446791d',
+            }
+
+            alert('EpayCore')
+            fetch('https://api.epaycore.com/checkout/form',{
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: JSON.stringify(data)
+            }).then(res => {
+                console.log(res)
+            }).catch(err => {
+                console.log(err)
+            })
+            //request.open('POST', 'https://api.epaycore.com/checkout/form');
+            //
+            // request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            //
+            // request.onreadystatechange = function () {
+            //   if (this.readyState === 4) {
+            //     console.log('Status:', this.status);
+            //     console.log('Headers:', this.getAllResponseHeaders());
+            //     console.log('Body:', this.responseText);
+            //   }
+            // };
+            //
+            // var body = "[ \
+            //     'epc_merchant_id' => 100000, \
+            //     'epc_commission' => 1, \
+            //     'epc_amount' => 10.5, \
+            //     'epc_currency_code' => 'usd', \
+            //     'epc_order_id' => '123456789', \
+            //     'epc_success_url' => 'https://website.com/success', \
+            //     'epc_cancel_url' => 'https://website.com/cance', \
+            //     'epc_status_url' => 'https://website.com/status', \
+            //     'epc_sign' => '0bb189931db0cb0a9e5c446791d' \
+            // ]";
+
         } else {
             setAmount(depositAmount);
 
-            coins.map(c => {
+            coins.forEach(c => {
                 if (c.symbol === selectedCurrency) {
                     const theCoinsValue = (c.price * depositAmount).toFixed(8);
                     setCoinsAmount(theCoinsValue);
@@ -82,12 +139,20 @@ function Deposit() {
 
             setShowModal(true);
         }
+        setTimeout(() => {
+            setNotifications(oldNotifications =>
+                oldNotifications.filter((_, i) => i !== 0));
+        }, 2000);
     }
 
     const processDeposit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const address = formData.get('address');
+
+        if (!isLogged){
+            redirect('/login');
+        }
 
         if (!selectedCurrency) {
             setNotifications(oldNotifications =>
@@ -96,7 +161,7 @@ function Deposit() {
                            message={`Please, select payment processor!`}/>
                 ]);
         }
-        else if (amount < minDeposit) {
+        if (amount < minDeposit) {
             setNotifications(oldNotifications =>
                 [...oldNotifications,
                     <Alert alertType={'Error'}
@@ -125,6 +190,12 @@ function Deposit() {
                         <Alert alertType={'Error'}
                                message={err.message}/>
                     ]);
+                if (err.message === 'Invalid or Expired Token!'){
+                    logoutUser();
+                    setTimeout(()=>{
+                        redirect('/login')
+                    },1000)
+                }
             })
         }
 

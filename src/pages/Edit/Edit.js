@@ -5,8 +5,10 @@ import {useStateContext} from "../../context/ContextProvider";
 import EditWallets from "./EditWallets";
 import EditPassword from "./EditPassword";
 import EditEmail from "./EditEmail";
+import {useNavigate} from "react-router-dom";
 
 function Edit() {
+    const redirect = useNavigate();
     const {user, logoutUser} = useStateContext();
     const [processors, setProcessors] = useState([]);
     const [wallets, setWallets] = useState([]);
@@ -14,17 +16,25 @@ function Edit() {
 
     useEffect(() => {
         paymentService.getProcessors(user.token).then(res => {
-            console.log(res.processors)
             setProcessors(res.processors);
         }).catch(err => {
-            console.log(err)
+            if (err.message === 'Invalid or Expired Token!') {
+                logoutUser();
+                setTimeout(() => {
+                    redirect('/login')
+                }, 1000)
+            }
         })
         paymentService.getUserWallets(user.token)
             .then(r => {
-                console.log(r.wallets)
                 setWallets(r.wallets);
             }).catch(err => {
-            console.log(err)
+            if (err.message === 'Invalid or Expired Token!') {
+                logoutUser();
+                setTimeout(() => {
+                    redirect('/login')
+                }, 1000)
+            }
         });
     }, [])
 
@@ -52,24 +62,24 @@ function Edit() {
                             <div className={'grid grid-cols-1 md:grid-cols-2 gap-8'}>
 
                                 {/*Change Password*/}
-                                <EditPassword styles={{boxStyle,inputStyle,saveBtn}}
+                                <EditPassword styles={{boxStyle, inputStyle, saveBtn}}
                                               user={user}
                                               logoutUser={logoutUser}
-                                              setNotifications={setNotifications} />
+                                              setNotifications={setNotifications}/>
 
                                 {/*Change Email*/}
-                                <EditEmail styles={{boxStyle,inputStyle,saveBtn}}
+                                <EditEmail styles={{boxStyle, inputStyle, saveBtn}}
                                            user={user}
                                            logoutUser={logoutUser}
-                                           setNotifications={setNotifications} />
+                                           setNotifications={setNotifications}/>
 
                                 {/*Change Payment Processors*/}
-                                <EditWallets styles={{boxStyle,inputStyle,saveBtn}}
+                                <EditWallets styles={{boxStyle, inputStyle, saveBtn}}
                                              user={user}
                                              logoutUser={logoutUser}
                                              setNotifications={setNotifications}
                                              wallets={wallets}
-                                             processors={processors} />
+                                             processors={processors}/>
 
 
                             </div>

@@ -3,9 +3,11 @@ import {Alert, InnerHeader} from "../../../../components";
 import {useEffect, useState} from "react";
 import {getSharesStat, shareDividends} from "../../../../services/sharesService";
 import {useStateContext} from "../../../../context/ContextProvider";
+import {useNavigate} from "react-router-dom";
 
 function ShareProfit() {
-    const {user} = useStateContext();
+    const redirect = useNavigate();
+    const {user,logoutUser} = useStateContext();
     const [notifications, setNotifications] = useState([]);
     const [totalShares, setTotalShares] = useState();
     const [totalOrders, setTotalOrders] = useState();
@@ -13,13 +15,20 @@ function ShareProfit() {
     const [profitPerShare, setProfitPerShare] = useState(0.00);
 
     useEffect(() => {
+        if (user.role !== 1){
+            redirect('/login');
+        }
         getSharesStat().then(res => {
-            console.log(res)
             setTotalShares(res.total)
             setTotalOrders(res.orders)
             setTotalHold(res.hold)
         }).catch(err => {
-            console.log(err)
+            if (err.message === 'Invalid or Expired Token!'){
+                logoutUser();
+                setTimeout(()=>{
+                    redirect('/login')
+                },1000)
+            }
         })
     }, [])
 
@@ -27,6 +36,11 @@ function ShareProfit() {
 
     const processShareDividend = (e) => {
         e.preventDefault();
+
+        if (user.role !== 1){
+            redirect('/login');
+        }
+
         const percentReturn = profitPerShare / (totalHold / 100);
         const data = {
             profitPerShare,
@@ -35,7 +49,6 @@ function ShareProfit() {
         };
         shareDividends(data, user.token)
             .then(res => {
-                console.log(res)
                 setNotifications(oldNotifications =>
                     [...oldNotifications,
                         <Alert alertType={'Success'}
@@ -47,6 +60,12 @@ function ShareProfit() {
                     <Alert alertType={'Error'}
                            message={err.message}/>
                 ]);
+            if (err.message === 'Invalid or Expired Token!'){
+                logoutUser();
+                setTimeout(()=>{
+                    redirect('/login')
+                },1000)
+            }
         })
         setTimeout(() => {
             setNotifications(oldNotifications =>

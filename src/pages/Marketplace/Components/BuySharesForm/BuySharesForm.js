@@ -1,17 +1,21 @@
 import {buy} from "../../../../services/sharesService";
 import {useState} from "react";
 import {Alert} from "../../../../components";
+import {useNavigate} from "react-router-dom";
 
 function BuySharesForm(
     {
         order,
         setOrder,
         user,
+        isLogged,
+        logoutUser,
         accountStat,
         totalShares,
         setTotalShares,
         setNotification
     }) {
+    const redirect = useNavigate();
     const [buyQuantity, setBuyQuantity] = useState(1);
 
     const buySharesHandler = (e) => {
@@ -20,6 +24,10 @@ function BuySharesForm(
         const {quantity} = Object.fromEntries(formData);
 
         const totalCost = (quantity * order.price) * 1.1;
+
+        if (!isLogged){
+            redirect('/login');
+        }
 
         if (totalCost > accountStat.balance) {
             setNotification(<Alert alertType={'Error'}
@@ -43,6 +51,12 @@ function BuySharesForm(
             }).catch(err => {
             setNotification(<Alert alertType={'Error'}
                                    message={err.message}/>)
+            if (err.message === 'Invalid or Expired Token!'){
+                logoutUser();
+                setTimeout(()=>{
+                    redirect('/login')
+                },1000)
+            }
         })
         setTimeout(() => {
             setNotification(undefined);

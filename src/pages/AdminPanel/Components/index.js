@@ -6,3 +6,4 @@ export {default as PendingWithdrawals} from './PendingWithdrawals';
 export {default as ShareProfit} from './ShareProfit';
 export {default as ProfitHistory} from './ProfitHistory';
 export {default as EditProcessors} from './EditProcessors';
+export {default as ManageUsers} from './ManageUsers';

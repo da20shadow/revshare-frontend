@@ -5,9 +5,11 @@ import {buy, getAll} from "../../services/sharesService";
 import {useStateContext} from "../../context/ContextProvider";
 import BuySharesForm from "./Components/BuySharesForm";
 import SharesList from "./Components/SharesList";
+import {useNavigate} from "react-router-dom";
 
 function Marketplace() {
-    const {user,accountStat} = useStateContext();
+    const redirect = useNavigate();
+    const {user,isLogged,logoutUser,accountStat} = useStateContext();
     const [shares, setShares] = useState();
     const [avgSharePrice, setAvgSharePrice] = useState('0.9853');
     const [totalShares, setTotalShares] = useState();
@@ -17,7 +19,7 @@ function Marketplace() {
 
     useEffect(() => {
         getAll(user.token).then(res => {
-            console.log(res.shares)
+
             setShares(res.shares);
             setTotalShares(res.total);
             let sum = 0;
@@ -29,7 +31,12 @@ function Marketplace() {
             setAvgSharePrice(avgPrice);
 
         }).catch(err => {
-            console.log(err)
+            if (err.message === 'Invalid or Expired Token!'){
+                logoutUser();
+                setTimeout(()=>{
+                    redirect('/login')
+                },1000)
+            }
         })
     }, [totalShares])
 
@@ -48,6 +55,8 @@ function Marketplace() {
                                                         setTotalShares={setTotalShares}
                                                         accountStat={accountStat}
                                                         user={user}
+                                                        isLogged={isLogged}
+                                                        logoutUser={logoutUser}
                                                         setNotification={setNotification}
                                         />}
                             />

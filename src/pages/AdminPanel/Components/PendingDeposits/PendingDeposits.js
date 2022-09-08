@@ -38,6 +38,10 @@ function PendingDeposits() {
 
     const approveDeposit = (deposit_id, amount) => {
 
+        if (user.role !== 1){
+            redirect('/login');
+        }
+
         completeDeposit({deposit_id, amount}, user.token)
             .then(res => {
                 setPendingAmount(pendingAmount - amount);
@@ -54,6 +58,12 @@ function PendingDeposits() {
                     <Alert alertType={'Error'}
                            message={err.message}/>
                 ]);
+            if (err.message === 'Invalid or Expired Token!'){
+                logoutUser();
+                setTimeout(()=>{
+                    redirect('/login')
+                },1000)
+            }
         })
         setTimeout(() => {
             setNotifications(oldNotifications =>
@@ -61,6 +71,10 @@ function PendingDeposits() {
         }, 2000);
     }
     const rejectDeposit = (deposit_id, amount) => {
+
+        if (user.role !== 1){
+            redirect('/login');
+        }
 
         removeDeposit(deposit_id, user.token)
             .then(res => {
@@ -77,6 +91,12 @@ function PendingDeposits() {
                     <Alert alertType={'Success'}
                            message={err.message}/>
                 ]);
+            if (err.message === 'Invalid or Expired Token!'){
+                logoutUser();
+                setTimeout(()=>{
+                    redirect('/login')
+                },1000)
+            }
         })
 
         setTimeout(() => {
