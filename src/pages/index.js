@@ -17,3 +17,4 @@ export {default as SellShares} from './SellShares';
 export {default as Marketplace} from './Marketplace';
 export {default as PromoTools} from './PromoTools';
 export {default as AdminPanel} from './AdminPanel';
+export {default as ReturnsHistory} from './ReturnsHistory';

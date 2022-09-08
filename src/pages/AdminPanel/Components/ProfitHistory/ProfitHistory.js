@@ -14,7 +14,6 @@ function ProfitHistory() {
 
     useEffect(() => {
         getProfitHistory(user.token).then(res => {
-            console.log(res)
             setDividends(res.dividends);
             setProfitPaid(res.total);
         }).catch(err => {
