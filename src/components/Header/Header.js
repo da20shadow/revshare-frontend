@@ -52,6 +52,12 @@ function Header() {
                                                  : 'border border-white hover:border-gray-300 text-gray-700 block m-2 px-4 py-2 hover:bg-gray-100 rounded-md'}>
                                     Withdrawals History
                                 </NavLink>
+                                <NavLink to="/returns-history"
+                                         className={({isActive}) =>
+                                             isActive ? 'block m-2 px-4 py-2 text-white bg-gradient-to-r from-blue-500 to-cyan-500 rounded-md'
+                                                 : 'border border-white hover:border-gray-300 text-gray-700 block m-2 px-4 py-2 hover:bg-gray-100 rounded-md'}>
+                                    Profit History
+                                </NavLink>
 
                             </div>
                         </div>
