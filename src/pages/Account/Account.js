@@ -11,7 +11,6 @@ function Account(){
 
     useEffect(()=> {
         getAccountStat(user.token).then(stat =>{
-            console.log(stat)
             setAccountStat(stat);
         }).catch(err =>{
             if (err.message === 'Invalid or Expired Token!'){
