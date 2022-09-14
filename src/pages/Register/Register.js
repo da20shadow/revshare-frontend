@@ -1,24 +1,33 @@
-import {InnerHeader} from "../../components";
+import {Alert, InnerHeader} from "../../components";
 import {invalidUserInputs} from "../../utils/validators";
 import {register} from "../../services/userService";
 import {useNavigate, useParams} from "react-router-dom";
+import {useState} from "react";
 
 function Register() {
     const invitedBy = useParams();
-    console.log(invitedBy)
+    const [notifications, setNotifications] = useState([]);
     const redirect = useNavigate();
 
     const regHandler = (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
 
-        if (formData.get('agree') !== 'on'){
-            alert('You must agree with the rules!');
+        if (formData.get('agree') !== 'on') {
+            setNotifications(oldNotifications =>
+                [...oldNotifications,
+                    <Alert alertType={'Error'}
+                           message={'You must agree with the rules of the project!'}/>
+                ]);
+            setTimeout(() => {
+                setNotifications(oldNotifications =>
+                    oldNotifications.filter((_, i) => i !== 0));
+            }, 1000);
             return;
         }
         const userInputs = Object.fromEntries(formData);
 
-        if (!invalidUserInputs(userInputs)){
+        if (!invalidUserInputs(userInputs)) {
             return;
         }
 
@@ -26,15 +35,26 @@ function Register() {
             userInputs['refer_id'] = invitedBy.id;
         }
 
-        register(userInputs).then(()=>{
-            setTimeout(()=>{
+        register(userInputs).then(() => {
+            setNotifications(oldNotifications =>
+                [...oldNotifications,
+                    <Alert alertType={'Success'}
+                           message={'Successfully Registered in!'}/>
+                ]);
+            setTimeout(() => {
                 redirect('/login');
-            },500)
+            }, 1500)
         }).catch(err => {
-            console.log(err.message)
-            alert(err.message)
-            //TODO: add notification
+            setNotifications(oldNotifications =>
+                [...oldNotifications,
+                    <Alert alertType={'Error'}
+                           message={err.message}/>
+                ]);
         })
+        setTimeout(() => {
+            setNotifications(oldNotifications =>
+                oldNotifications.filter((_, i) => i !== 0));
+        }, 1000);
     }
 
     const labelStyle = 'text-gray-700 text-lg';
@@ -49,14 +69,14 @@ function Register() {
                         <div className="h-fit">
 
                             <form onSubmit={regHandler}
-                                className={'w-full lg:w-4/5 mx-auto shadow-xl rounded-md bg-gray-200 px-10 py-10 grid grid-cols-1 md:grid-cols-2 gap-4'}>
+                                  className={'w-full lg:w-4/5 mx-auto shadow-xl rounded-md bg-gray-200 px-10 py-10 grid grid-cols-1 md:grid-cols-2 gap-4'}>
 
                                 <label className={labelStyle}>Username:
                                     <input name={'username'}
                                            className={inputStyle}
                                            type="text"
                                            placeholder={'Username'}
-                                           required />
+                                           required/>
                                 </label>
 
                                 <label className={labelStyle}>Email:
@@ -64,7 +84,7 @@ function Register() {
                                            className={inputStyle}
                                            type="email"
                                            placeholder={'Email'}
-                                           required />
+                                           required/>
                                 </label>
 
                                 <label className={labelStyle}>Password:
@@ -72,25 +92,27 @@ function Register() {
                                            className={inputStyle}
                                            type="password"
                                            placeholder={'Password'}
-                                           required />
+                                           required/>
                                 </label>
 
                                 <label className={labelStyle}>Re-Password:
                                     <input name={'re_password'} className={inputStyle} type="password"
-                                           placeholder={'Re-Password'} required />
+                                           placeholder={'Re-Password'} required/>
                                 </label>
                                 {/*TODO: add captcha*/}
 
                                 <div>
                                     <label className={'text-lg'}>
-                                        <input name={'agree'} type="checkbox" className={'h-5 w-5 mx-3'} required />
-                                        I agree with the <a className={'font-bold text-sky-700'} href={'/rules'}>rules</a> of the system.
+                                        <input name={'agree'} type="checkbox" className={'h-5 w-5 mx-3'} required/>
+                                        I agree with the <a className={'font-bold text-sky-700'}
+                                                            href={'/rules'}>rules</a> of the system.
                                     </label>
                                 </div>
 
                                 <div className={'flex justify-end'}>
-                                    <button className={'text-white font-bold bg-gradient-to-r from-orange-400 to-orange-600 text-xl px-10 py-2 border hover:shadow-lg rounded-lg'}
-                                            type={'submit'}>Register
+                                    <button
+                                        className={'text-white font-bold bg-gradient-to-r from-orange-400 to-orange-600 text-xl px-10 py-2 border hover:shadow-lg rounded-lg'}
+                                        type={'submit'}>Register
                                     </button>
                                 </div>
 
